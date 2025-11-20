@@ -262,7 +262,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     return (
       <div className="my-8 overflow-x-auto py-4">
         <div
-          className="inline-block border-b-2 border-dotted border-premium-gold/50 pb-2"
+          className="inline-block bg-premium-gold/20 px-4 py-2 rounded-sm"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>
