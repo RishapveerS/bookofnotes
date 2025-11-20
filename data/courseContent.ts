@@ -146,8 +146,7 @@ export const courseContent: MainSection[] = [
           `● la normativa assicurativa`,
           `● il fisco e il sistema di tassazione`,
           `9.2 Remunerazione dello Stato: le tasse`,
-          `Le tasse remunerano i servizi pubblici forniti anche alle imprese. Hanno carattere di remunerazione variabile, in quanto sono collegate al risultato economico dell’impresa:`,
-          `● più utile genera l’impresa, più tasse deve pagare`,
+          `Le tasse remunerano i servizi pubblici forniti anche alle imprese. Hanno carattere di remunerazione variabile, in quanto sono collegate al risultato economico dell’impresa: più utile genera l’impresa, più tasse deve pagare`,
           `Sintesi: chi apporta cosa e come viene remunerato`,
           {
             headers: ["Soggetto", "Cosa apporta", "Come viene remunerato", "Tipo di remunerazione"],
