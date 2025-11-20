@@ -5,7 +5,6 @@ import LessonRail from './components/LessonRail';
 import SectionDisplay from './components/SectionDisplay';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
-import ThemeToggle from './components/ThemeToggle';
 import { courseContent } from './data/courseContent';
 
 const App: React.FC = () => {
@@ -25,7 +24,6 @@ const App: React.FC = () => {
 
       <Footer />
       <ScrollToTopButton />
-      <ThemeToggle />
     </div>
   );
 };
