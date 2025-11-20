@@ -268,7 +268,22 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   }
 
   if (text.startsWith('●') || text.startsWith('○')) {
-    const content = text.substring(text.indexOf(' ')).trim();
+    const content = text.replace(/^[●○]\s*/, '').trim();
+
+    // Check for "Term: Definition" pattern
+    // We look for a colon in the first part of the string (e.g., first 60 chars) to identify it as a label
+    const colonIndex = content.indexOf(':');
+    if (colonIndex !== -1 && colonIndex < 60) {
+      const term = content.substring(0, colonIndex + 1);
+      const definition = content.substring(colonIndex + 1);
+
+      return (
+        <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
+          <strong className="text-white font-semibold">{term}</strong>{definition}
+        </p>
+      );
+    }
+
     return (
       <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
         {content}
