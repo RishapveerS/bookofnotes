@@ -4,9 +4,15 @@ export interface TableData {
   rows: string[][];
 }
 
+export interface ImageData {
+  url: string;
+  alt: string;
+  caption?: string;
+}
+
 export interface SubSection {
   title: string;
-  content: (string | TableData)[];
+  content: (string | TableData | ImageData)[];
 }
 
 export interface MainSection {

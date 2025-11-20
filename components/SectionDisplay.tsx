@@ -14,31 +14,49 @@ interface SectionDisplayProps {
   section: MainSection;
 }
 
-const GlossaryTooltip: React.FC<{ term: string; children: React.ReactNode }> = ({ term, children }) => {
+const GLOSSARY_TERMS: Record<string, string> = {
+  'stakeholder': 'Soggetto che ha un interesse (stake) nell\'attività dell\'impresa.',
+  'shareholder': 'Azionista, proprietario di quote del capitale sociale.',
+  'shareholders': 'Proprietari dell’impresa (azionisti/soci).',
+  'core business': 'Attività principale dell\'impresa, quella che genera il maggior fatturato.',
+  'governance': 'Sistema di regole e organi per il governo e il controllo dell\'impresa.',
+  'corporate governance': 'Sistema di regole per il governo e controllo dell’impresa.',
+  'b2b': 'Business to Business: transazioni commerciali tra imprese.',
+  'b2c': 'Business to Consumer: transazioni tra impresa e consumatore finale.',
+  'startup': 'Impresa di recente costituzione ad alto contenuto innovativo.',
+  'spin-off': 'Nuova impresa nata da una costola di un\'altra impresa o ente di ricerca.',
+  'ammortamento': 'Procedimento contabile di ripartizione del costo di un bene pluriennale.',
+  'utile': 'Differenza positiva tra ricavi e costi di un esercizio.',
+  'profitto': 'Guadagno economico derivante dall\'attività d\'impresa.',
+  'asset': 'Risorsa economica posseduta dall\'impresa che si prevede fornirà benefici futuri.',
+  'liability': 'Obbligazione attuale dell\'impresa derivante da eventi passati.',
+  'equity': 'Patrimonio netto, la differenza tra attività e passività.',
+  'cash flow': 'Flusso di cassa, la differenza tra entrate e uscite monetarie.',
+  'flusso di cassa': 'Differenza tra entrate e uscite monetarie.',
+  'roi': 'Return on Investment, indice di redditività del capitale investito.',
+  'roe': 'Return on Equity, indice di redditività del capitale proprio.',
+  'ebitda': 'Utile prima di interessi, tasse, svalutazioni e ammortamenti.',
+  'impresa': 'Attività economica organizzata per la produzione o scambio di beni/servizi.',
+  'imprenditore': 'Chi esercita professionalmente un’attività economica organizzata.',
+  'azienda': 'Il complesso dei beni organizzati dall’imprenditore.',
+  'manager': 'Professionisti che gestiscono l’impresa.',
+  'valore economico': 'Capacità di generare rendimento futuro.',
+  'bilancio': 'Documento che rappresenta la situazione patrimoniale e finanziaria.',
+  'ricavi': 'Valore delle vendite di beni e servizi.',
+  'costi': 'Valore delle risorse consumate.',
+};
+
+// Helper for regex
+const highlightTokens = Object.keys(GLOSSARY_TERMS);
+const escapedTokens = highlightTokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+// Sort tokens by length descending to match longest terms first
+escapedTokens.sort((a, b) => b.length - a.length);
+const highlightPattern = new RegExp(`(\\*\\*|\\b(?:${escapedTokens.join('|')})\\b)`, 'gi');
+
+const GlossaryTooltip: React.FC<{ term: string; definition?: string; children: React.ReactNode }> = ({ term, definition, children }) => {
   const [show, setShow] = useState(false);
 
-  const definitions: Record<string, string> = {
-    'stakeholder': 'Soggetto che ha un interesse (stake) nell\'attività dell\'impresa.',
-    'shareholder': 'Azionista, proprietario di quote del capitale sociale.',
-    'core business': 'Attività principale dell\'impresa, quella che genera il maggior fatturato.',
-    'governance': 'Sistema di regole e organi per il governo e il controllo dell\'impresa.',
-    'b2b': 'Business to Business: transazioni commerciali tra imprese.',
-    'b2c': 'Business to Consumer: transazioni tra impresa e consumatore finale.',
-    'startup': 'Impresa di recente costituzione ad alto contenuto innovativo.',
-    'spin-off': 'Nuova impresa nata da una costola di un\'altra impresa o ente di ricerca.',
-    'ammortamento': 'Procedimento contabile di ripartizione del costo di un bene pluriennale.',
-    'utile': 'Differenza positiva tra ricavi e costi di un esercizio.',
-    'profitto': 'Guadagno economico derivante dall\'attività d\'impresa.',
-    'asset': 'Risorsa economica posseduta dall\'impresa che si prevede fornirà benefici futuri.',
-    'liability': 'Obbligazione attuale dell\'impresa derivante da eventi passati.',
-    'equity': 'Patrimonio netto, la differenza tra attività e passività.',
-    'cash flow': 'Flusso di cassa, la differenza tra entrate e uscite monetarie.',
-    'roi': 'Return on Investment, indice di redditività del capitale investito.',
-    'roe': 'Return on Equity, indice di redditività del capitale proprio.',
-    'ebitda': 'Utile prima di interessi, tasse, svalutazioni e ammortamenti.',
-  };
-
-  const def = definitions[term.toLowerCase()];
+  const def = definition || GLOSSARY_TERMS[term.toLowerCase()];
 
   if (!def) return <>{children}</>;
 
@@ -84,6 +102,42 @@ const isTableData = (item: string | TableData): item is TableData => {
   return (item as TableData).headers !== undefined;
 };
 
+const renderWithHighlights = (value: string, boldClass = "font-bold text-white") => {
+  if (!value) return null;
+
+  const parts = value.split(highlightPattern);
+  const result: React.ReactNode[] = [];
+  let isBold = false;
+
+  parts.forEach((part, index) => {
+    if (!part) return;
+
+    if (part === '**') {
+      isBold = !isBold;
+      return;
+    }
+
+    const lowerPart = part.toLowerCase();
+    if (GLOSSARY_TERMS[lowerPart]) {
+      result.push(
+        <GlossaryTooltip key={index} term={part} definition={GLOSSARY_TERMS[lowerPart]}>
+          <span className="font-bold text-white bg-premium-gold/10 px-1 rounded-sm transition-colors duration-300 hover:bg-premium-gold/20">
+            {part}
+          </span>
+        </GlossaryTooltip>
+      );
+    } else {
+      if (isBold) {
+        result.push(<strong key={index} className={boldClass}>{part}</strong>);
+      } else {
+        result.push(<span key={index}>{part}</span>);
+      }
+    }
+  });
+
+  return <>{result}</>;
+};
+
 const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: string, alt: string) => void }> = ({ item, onImageClick }) => {
   if (isTableData(item)) {
     // Check if this is the "Sintesi" table to render a chart
@@ -115,7 +169,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
                 {item.rows.map((row, rowIndex) => (
                   <tr key={rowIndex} className="hover:bg-white/5 transition-colors">
                     {row.map((cell, cellIndex) => (
-                      <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{cell}</td>
+                      <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{renderWithHighlights(cell)}</td>
                     ))}
                   </tr>
                 ))}
@@ -170,7 +224,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
             {item.rows.map((row, rowIndex) => (
               <tr key={rowIndex} className="hover:bg-white/5 transition-colors">
                 {row.map((cell, cellIndex) => (
-                  <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{cell}</td>
+                  <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{renderWithHighlights(cell)}</td>
                 ))}
               </tr>
             ))}
@@ -178,50 +232,10 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
         </table>
       </div>
     );
-
-
   }
 
   const text = (item as string).trim();
-
-  const glossaryTerms: Record<string, string> = {
-    'impresa': 'Attività economica organizzata per la produzione o scambio di beni/servizi.',
-    'imprenditore': 'Chi esercita professionalmente un’attività economica organizzata.',
-    'azienda': 'Il complesso dei beni organizzati dall’imprenditore.',
-    'stakeholder': 'Soggetti che hanno interesse nell’attività dell’impresa.',
-    'shareholders': 'Proprietari dell’impresa (azionisti/soci).',
-    'manager': 'Professionisti che gestiscono l’impresa.',
-    'profitto': 'Differenza positiva tra ricavi e costi.',
-    'valore economico': 'Capacità di generare rendimento futuro.',
-    'bilancio': 'Documento che rappresenta la situazione patrimoniale e finanziaria.',
-    'ricavi': 'Valore delle vendite di beni e servizi.',
-    'costi': 'Valore delle risorse consumate.',
-    'utile': 'Risultato economico positivo (Ricavi > Costi).',
-    'flusso di cassa': 'Differenza tra entrate e uscite monetarie.',
-    'ammortamento': 'Ripartizione del costo di un bene pluriennale negli anni.',
-    'corporate governance': 'Sistema di regole per il governo e controllo dell’impresa.'
-  };
-
-  const highlightTokens = Object.keys(glossaryTerms);
-  const highlightPattern = new RegExp(`\\b(${highlightTokens.join('|')})\\b`, 'gi');
-
-  const renderWithHighlights = (value: string) => {
-    const parts = value.split(highlightPattern);
-
-    return parts.map((part, index) => {
-      const lowerPart = part.toLowerCase();
-      if (glossaryTerms[lowerPart]) {
-        return (
-          <GlossaryTooltip key={index} term={part} definition={glossaryTerms[lowerPart]}>
-            <span className="font-bold text-white bg-premium-gold/10 px-1 rounded-sm transition-colors duration-300 hover:bg-premium-gold/20">
-              {part}
-            </span>
-          </GlossaryTooltip>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
-  };
+  const cleanText = text.replace(/\*\*/g, '');
 
   // Callout: warning / attenzione
   if (/^Attenzione\s*[:\-]/i.test(text)) {
@@ -233,7 +247,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           Attenzione
         </p>
-        <p className="text-sm leading-relaxed text-amber-100/90 font-light">{content}</p>
+        <p className="text-sm leading-relaxed text-amber-100/90 font-light">{renderWithHighlights(content)}</p>
       </div>
     );
   }
@@ -248,7 +262,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400"></span>
           Nota
         </p>
-        <p className="text-sm leading-relaxed text-sky-100/90 font-light">{content}</p>
+        <p className="text-sm leading-relaxed text-sky-100/90 font-light">{renderWithHighlights(content)}</p>
       </div>
     );
   }
@@ -273,7 +287,6 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     const content = text.replace(/^[●○]\s*/, '').trim();
 
     // Check for "Term: Definition" pattern
-    // We look for a colon in the first part of the string (e.g., first 60 chars) to identify it as a label
     const colonIndex = content.indexOf(':');
     if (colonIndex !== -1 && colonIndex < 60) {
       const term = content.substring(0, colonIndex + 1);
@@ -281,19 +294,19 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
       return (
         <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
-          <strong className="text-white font-semibold">{term}</strong>{definition}
+          <strong className="text-white font-semibold">{renderWithHighlights(term)}</strong>{renderWithHighlights(definition)}
         </p>
       );
     }
 
     return (
       <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
-        {content}
+        {renderWithHighlights(content)}
       </p>
     );
   }
 
-  if (text.startsWith("L’impresa è un istituto economico")) {
+  if (cleanText.startsWith("L’impresa è un istituto economico")) {
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group">
         <div className="flex-1">
@@ -309,11 +322,11 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     );
   }
 
-  if (text.startsWith("I soggetti economici in relazione con l’impresa")) {
+  if (cleanText.startsWith("I soggetti economici in relazione con l’impresa")) {
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8">
         <div className="flex-1">
-          <p className="font-serif text-xl text-premium-gold mb-4">{item}</p>
+          <p className="font-serif text-xl text-premium-gold mb-4">{renderWithHighlights(item as string, "font-bold")}</p>
           <p className="text-gray-300 leading-relaxed font-light">
             Questa figura illustra le relazioni tra l'impresa e i vari soggetti economici che interagiscono con essa, evidenziando i flussi di beni, servizi e denaro.
           </p>
@@ -326,11 +339,11 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     );
   }
 
-  if (text.startsWith("1.2 Livelli di analisi: la catena del valore")) {
+  if (cleanText.startsWith("1.2 Livelli di analisi: la catena del valore")) {
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
         <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{item}</p>
+          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
           <p className="text-gray-300 leading-relaxed font-light">
             La catena del valore disaggrega l'impresa nelle sue attività strategicamente rilevanti allo scopo di comprendere l'andamento dei costi e le fonti esistenti e potenziali di differenziazione.
           </p>
@@ -343,11 +356,11 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     );
   }
 
-  if (text.startsWith("1.4 Strutture funzionali vs divisionali")) {
+  if (cleanText.startsWith("1.4 Strutture funzionali vs divisionali")) {
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
         <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{item}</p>
+          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
           <p className="text-gray-300 leading-relaxed font-light">
             Confronto visivo tra la struttura organizzativa funzionale (basata sulle competenze) e quella divisionale (basata su prodotti o mercati).
           </p>
@@ -355,6 +368,42 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
         <div className="w-full lg:w-5/12 flex-shrink-0">
           <ImageThumbnail src={orgChartImg} alt="Struttura Funzionale vs Divisionale" onImageClick={onImageClick} />
           <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 4: Organigrammi a confronto</p>
+        </div>
+      </div>
+    );
+  }
+
+
+
+  if (cleanText.startsWith("Cos’è il conto economico")) {
+    return (
+      <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
+        <div className="flex-1">
+          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
+          <p className="text-gray-300 leading-relaxed font-light">
+            Flusso scalare del Conto Economico per la determinazione del risultato d'esercizio.
+          </p>
+        </div>
+        <div className="w-full lg:w-5/12 flex-shrink-0">
+          <ImageThumbnail src="/images/conto_economico.png" alt="Schema Conto Economico" onImageClick={onImageClick} />
+          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 6: Conto Economico</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (cleanText.startsWith("Idea chiave dell’ABC")) {
+    return (
+      <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
+        <div className="flex-1">
+          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
+          <p className="text-gray-300 leading-relaxed font-light">
+            Logica di allocazione dei costi nell'Activity Based Costing: Risorse &rarr; Attività &rarr; Prodotti.
+          </p>
+        </div>
+        <div className="w-full lg:w-5/12 flex-shrink-0">
+          <ImageThumbnail src="/images/abc_costing.png" alt="Schema Activity Based Costing" onImageClick={onImageClick} />
+          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 7: Activity Based Costing</p>
         </div>
       </div>
     );
@@ -375,10 +424,10 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     '1.1 Definizione economica di impresa'
   ];
 
-  const isBoldTitle = boldableKeywords.some(keyword => text.startsWith(keyword));
+  const isBoldTitle = boldableKeywords.some(keyword => cleanText.startsWith(keyword));
 
   if (isBoldTitle) {
-    return <p className="font-serif text-lg text-premium-gold mt-8 mb-2">{item}</p>;
+    return <p className="font-serif text-lg text-premium-gold mt-8 mb-2">{renderWithHighlights(item as string, "font-bold")}</p>;
   }
 
   // Check for numbered sub-headings (e.g. 1.1.1, 2.1.3) OR single numbered lists (e.g. 1. Title)
@@ -386,7 +435,8 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   // ^\d+(\.\d+)+\s  -> 1.1, 1.1.1 (multi-level)
   // OR
   // ^\d+\.\s        -> 1., 2. (single level)
-  if (/^(\d+(\.\d+)+|\d+\.)\s/.test(text)) {
+  // We check cleanText to ignore potential ** at start
+  if (/^(\d+(\.\d+)+|\d+\.)\s/.test(cleanText)) {
     return (
       <p className="font-bold text-lg text-white mt-6 mb-2">
         {renderWithHighlights(item as string)}
