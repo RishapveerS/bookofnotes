@@ -130,14 +130,14 @@ const Header: React.FC = () => {
           {/* Mobile Index Trigger (Ball) */}
           <MobileIndex />
 
-          <h1 className="font-serif text-lg tracking-wider text-gray-200 truncate">
+          <h1 className="font-serif text-base sm:text-lg tracking-wider text-gray-200 truncate">
             ECONOMIA <span className="text-premium-gold font-italic">AZIENDALE</span>
           </h1>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="relative group">
-            <div className={`flex items-center bg-white/5 border border-white/10 rounded-full px-3 py-1.5 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64 focus-within:bg-black/80 focus-within:border-premium-gold/50 w-28 sm:w-48`}>
+            <div className={`flex items-center bg-white/5 border border-white/10 rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64 focus-within:bg-black/80 focus-within:border-premium-gold/50 w-24 sm:w-48`}>
               <Search size={14} className="text-gray-500 mr-2 flex-shrink-0" />
               <input
                 type="text"

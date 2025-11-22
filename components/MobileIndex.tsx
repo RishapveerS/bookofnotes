@@ -51,10 +51,10 @@ const MobileIndex: React.FC = () => {
             {/* Trigger Ball */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-gray-200 hover:text-premium-gold hover:border-premium-gold/50 transition-all duration-300 active:scale-95 shadow-lg"
+                className="w-9 h-9 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-gray-200 hover:text-premium-gold hover:border-premium-gold/50 transition-all duration-300 active:scale-95 shadow-lg"
                 aria-label="Indice"
             >
-                <Menu size={20} />
+                <Menu size={18} />
             </button>
 
             {/* Modal Overlay */}
