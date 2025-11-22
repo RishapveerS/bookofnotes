@@ -7,12 +7,15 @@ import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { courseContent } from './data/courseContent';
 
+import MobileIndex from './components/MobileIndex';
+
 const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-premium-black text-gray-200 leading-relaxed selection:bg-premium-gold/30 selection:text-white">
       <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-premium-gray/40 via-premium-black to-black pointer-events-none" />
       <Header />
       <LessonRail />
+      <MobileIndex />
 
       <main className="relative z-10 max-w-7xl mx-auto px-6 lg:pl-80 py-32 sm:py-40 transition-all duration-300">
         <div className="flex flex-col gap-10 md:gap-12">
