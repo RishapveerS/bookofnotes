@@ -65,12 +65,20 @@ const MobileIndex: React.FC = () => {
     return (
         <div
             id="mobile-index-container"
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-md md:hidden"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-[90%] max-w-md md:hidden"
         >
+            {/* Backdrop Overlay */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm animate-in fade-in duration-300"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
             {/* Pill Bar */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between px-5 py-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full shadow-lg transition-all duration-300 active:scale-95"
+                className="relative z-40 w-full flex items-center justify-between px-5 py-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full shadow-lg transition-all duration-300 active:scale-95"
             >
                 <span className="text-sm font-medium text-gray-200 truncate pr-4">
                     {activeTitle}
@@ -82,7 +90,7 @@ const MobileIndex: React.FC = () => {
 
             {/* Expanded Panel */}
             {isOpen && (
-                <div className="absolute top-full left-0 right-0 mt-3 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                <div className="relative z-40 mt-3 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200 max-h-[60vh] overflow-y-auto custom-scrollbar">
                     <div className="py-2">
                         {courseContent.map((section, sIdx) => (
                             <div key={section.id} className="mb-2 last:mb-0">

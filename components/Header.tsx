@@ -126,9 +126,9 @@ const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Hidden as replaced by MobileIndex */}
           <button
-            className="lg:hidden text-gray-400 hover:text-white transition-colors"
+            className="hidden text-gray-400 hover:text-white transition-colors"
             onClick={() => setMobileMenuOpen(true)}
           >
             <Menu size={24} />
