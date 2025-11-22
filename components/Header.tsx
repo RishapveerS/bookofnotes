@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, X, Menu } from 'lucide-react';
 import { courseContent } from '../data/courseContent';
+import MobileIndex from './MobileIndex';
 
 interface SearchResult {
   title: string;
@@ -126,13 +127,8 @@ const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {/* Mobile Menu Button - Hidden as replaced by MobileIndex */}
-          <button
-            className="hidden text-gray-400 hover:text-white transition-colors"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu size={24} />
-          </button>
+          {/* Mobile Index Trigger (Ball) */}
+          <MobileIndex />
 
           <h1 className="font-serif text-lg tracking-wider text-gray-200 truncate">
             ECONOMIA <span className="text-premium-gold font-italic">AZIENDALE</span>
