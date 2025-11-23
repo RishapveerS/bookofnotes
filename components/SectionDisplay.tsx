@@ -273,39 +273,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
 
 
-  if (cleanText.startsWith("Cos’è il conto economico")) {
-    return (
-      <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
-        <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
-          <p className="text-gray-300 leading-relaxed font-light">
-            Flusso scalare del Conto Economico per la determinazione del risultato d'esercizio.
-          </p>
-        </div>
-        <div className="w-full lg:w-5/12 flex-shrink-0">
-          <ImageThumbnail src="/images/conto_economico.png" alt="Schema Conto Economico" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 6: Conto Economico</p>
-        </div>
-      </div>
-    );
-  }
 
-  if (cleanText.startsWith("Idea chiave dell’ABC")) {
-    return (
-      <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
-        <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
-          <p className="text-gray-300 leading-relaxed font-light">
-            Logica di allocazione dei costi nell'Activity Based Costing: Risorse &rarr; Attività &rarr; Prodotti.
-          </p>
-        </div>
-        <div className="w-full lg:w-5/12 flex-shrink-0">
-          <ImageThumbnail src="/images/abc_costing.png" alt="Schema Activity Based Costing" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 7: Activity Based Costing</p>
-        </div>
-      </div>
-    );
-  }
 
   // Bold titles that are not part of the main structure
   const boldableKeywords = [
