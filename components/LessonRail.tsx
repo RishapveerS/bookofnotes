@@ -41,7 +41,10 @@ const LessonRail: React.FC = () => {
 
             return (
               <div key={section.id} className="group">
-                <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="flex items-center gap-3 mb-3 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => handleClick(`${section.id}-0`)}
+                >
                   {!['glossario', 'formulario-esempi'].includes(section.id) ? (
                     <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 text-[10px] font-mono text-gray-400 group-hover:border-premium-gold group-hover:text-premium-gold transition-colors">
                       {sectionIndex + 1}

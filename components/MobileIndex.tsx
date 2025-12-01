@@ -83,11 +83,12 @@ const MobileIndex: React.FC = () => {
                         <div className="overflow-y-auto custom-scrollbar p-2">
                             {courseContent.map((section, sIdx) => (
                                 <div key={section.id} className="mb-2 last:mb-0">
-                                    {!['glossario', 'formulario-esempi'].includes(section.id) && (
-                                        <div className="px-4 py-2 text-[10px] font-mono text-premium-gold/50 uppercase tracking-widest">
-                                            {section.title.split(':')[0]}
-                                        </div>
-                                    )}
+                                    <div
+                                        className="px-4 py-2 text-[10px] font-mono text-premium-gold/50 uppercase tracking-widest cursor-pointer hover:text-premium-gold transition-colors"
+                                        onClick={() => handleClick(`${section.id}-0`)}
+                                    >
+                                        {section.title.split(':')[0]}
+                                    </div>
 
                                     <div className="space-y-1">
                                         {section.subsections.map((sub, subIdx) => {
