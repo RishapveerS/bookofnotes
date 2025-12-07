@@ -403,7 +403,14 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
         <div className="flex items-center gap-3 mb-4">
           {!['glossario', 'formulario-esempi'].includes(section.id) && (
             <span className="text-xs font-mono text-premium-gold uppercase tracking-widest border border-premium-gold/30 px-2 py-1 rounded">
-              Lezione {section.id.split('-')[0] === 'fondamenti' ? '1' : section.id.split('-')[0].replace('lezione', '')}
+              Lezione {
+                {
+                  'fondamenti-impresa': '1',
+                  'contabilita-esterna': '2',
+                  'contabilita-interna': '3',
+                  'sistemi-decisione': '4'
+                }[section.id] || section.id
+              }
             </span>
           )}
           <span className="text-xs font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1">
