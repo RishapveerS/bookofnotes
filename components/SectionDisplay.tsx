@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import katex from 'katex';
 import { MainSection, SubSection, TableData } from '../types';
 import image1 from '../images/image1.jpg';
 import image2 from '../images/image2.jpg';
@@ -42,29 +43,52 @@ const isTableData = (item: string | TableData): item is TableData => {
   return (item as TableData).headers !== undefined;
 };
 
+// Regex matches:
+// 1. **bold** (group 1)
+// 2. $inline math$ (group 2), handling escaped dollars if we wanted, but simple $...$ for now
+const contentPattern = /(\*\*[^*]+\*\*)|(\$[^$]+\$)/g;
+
 const renderWithHighlights = (value: string, boldClass = "font-bold text-content-primary") => {
   if (!value) return null;
 
-  const parts = value.split(highlightPattern);
-  const result: React.ReactNode[] = [];
-  let isBold = false;
+  // Normalize invisible chars once here too, just in case
+  const normalizedValue = value.replace(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g, '');
 
-  parts.forEach((part, index) => {
-    if (!part) return;
+  const parts = normalizedValue.split(contentPattern);
 
-    if (part === '**') {
-      isBold = !isBold;
-      return;
-    }
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (!part) return null;
 
-    if (isBold) {
-      result.push(<strong key={index} className={boldClass}>{part}</strong>);
-    } else {
-      result.push(<span key={index}>{part}</span>);
-    }
-  });
+        if (part.startsWith('**') && part.endsWith('**')) {
+          const content = part.substring(2, part.length - 2);
+          return <strong key={index} className={boldClass}>{content}</strong>;
+        }
 
-  return <>{result}</>;
+        if (part.startsWith('$') && part.endsWith('$')) {
+          const latex = part.substring(1, part.length - 1);
+          try {
+            const html = katex.renderToString(latex, {
+              throwOnError: false,
+              displayMode: false,
+            });
+            return (
+              <span
+                key={index}
+                className="inline-math text-premium-gold font-serif px-1"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            );
+          } catch (e) {
+            return <span key={index} className="text-red-400">{part}</span>;
+          }
+        }
+
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
 };
 
 const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: string, alt: string) => void }> = ({ item, onImageClick }) => {
@@ -172,8 +196,11 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     );
   }
 
-  if (text.startsWith('$$')) {
-    const latex = text.replace(/^\$\$|\$\$$/g, '');
+  // Check for math pattern, handling potential invisible characters
+  const normalizedText = text.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]+/, '');
+
+  if (normalizedText.startsWith('$$')) {
+    const latex = normalizedText.replace(/^\$\$|\$\$$/g, '');
     return (
       <React.Suspense fallback={<div className="my-8 h-12 animate-pulse bg-premium-glass rounded-sm"></div>}>
         <MathRenderer latex={latex} />
