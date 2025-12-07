@@ -12,8 +12,8 @@ interface RiskRewardChartProps {
 
 const RiskRewardChart: React.FC<RiskRewardChartProps> = ({ data }) => {
     return (
-        <div className="p-6 rounded-xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent">
-            <h4 className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-2">
+        <div className="p-6 rounded-xl border border-border-primary bg-gradient-to-b from-premium-glass to-transparent">
+            <h4 className="text-sm font-mono text-content-muted uppercase tracking-widest mb-6 border-b border-border-primary pb-2">
                 Analisi Rischio vs. Rendimento Potenziali
             </h4>
             <div className="h-[300px] w-full">
@@ -32,7 +32,7 @@ const RiskRewardChart: React.FC<RiskRewardChartProps> = ({ data }) => {
                     </BarChart>
                 </ResponsiveContainer>
             </div>
-            <div className="flex justify-center gap-6 mt-4 text-xs text-gray-500 font-mono">
+            <div className="flex justify-center gap-6 mt-4 text-xs text-content-muted font-mono">
                 <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-sm bg-red-500"></span> Rischio
                 </div>

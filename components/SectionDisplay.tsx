@@ -20,7 +20,7 @@ const highlightPattern = /(\*\*)/g;
 const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: string, alt: string) => void }> = ({ src, alt, onImageClick }) => {
   return (
     <div
-      className="relative overflow-hidden rounded-lg border border-white/10 shadow-2xl shadow-black/50 transition-all duration-500 hover:scale-[1.02] hover:border-premium-gold/30 cursor-zoom-in group"
+      className="relative overflow-hidden rounded-lg border border-border-primary shadow-2xl shadow-black/50 transition-all duration-500 hover:scale-[1.02] hover:border-premium-gold/30 cursor-zoom-in group"
       onClick={() => onImageClick(src, alt)}
     >
       <img
@@ -30,7 +30,7 @@ const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: s
         className="w-full h-auto filter grayscale hover:grayscale-0 transition-all duration-700"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none flex items-end justify-center pb-4">
-        <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+        <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-border-primary">
           <ZoomIn size={12} /> Ingrandisci
         </span>
       </div>
@@ -42,7 +42,7 @@ const isTableData = (item: string | TableData): item is TableData => {
   return (item as TableData).headers !== undefined;
 };
 
-const renderWithHighlights = (value: string, boldClass = "font-bold text-white") => {
+const renderWithHighlights = (value: string, boldClass = "font-bold text-content-primary") => {
   if (!value) return null;
 
   const parts = value.split(highlightPattern);
@@ -85,20 +85,20 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
       return (
         <div className="my-12 space-y-8">
-          <div className="overflow-x-auto rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm p-1">
+          <div className="overflow-x-auto rounded-lg border border-border-primary bg-premium-glass backdrop-blur-sm p-1">
             <table className="w-full text-left border-collapse">
-              <thead className="border-b border-white/10 bg-white/5">
+              <thead className="border-b border-border-primary bg-premium-glass">
                 <tr>
                   {item.headers.map((header, index) => (
                     <th key={index} className="p-4 text-xs font-mono font-medium text-premium-gold uppercase tracking-widest">{header}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-border-primary">
                 {item.rows.map((row, rowIndex) => (
-                  <tr key={rowIndex} className="hover:bg-white/5 transition-colors">
+                  <tr key={rowIndex} className="hover:bg-premium-glass transition-colors">
                     {row.map((cell, cellIndex) => (
-                      <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{renderWithHighlights(cell)}</td>
+                      <td key={cellIndex} className="p-4 text-sm text-content-secondary font-light">{renderWithHighlights(cell)}</td>
                     ))}
                   </tr>
                 ))}
@@ -106,8 +106,8 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
             </table>
           </div>
 
-          <div className="p-6 rounded-xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent">
-            <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-white/5 rounded-lg"></div>}>
+          <div className="p-6 rounded-xl border border-border-primary bg-gradient-to-b from-white/5 to-transparent">
+            <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-premium-glass rounded-lg"></div>}>
               <RiskRewardChart data={chartData} />
             </React.Suspense>
           </div>
@@ -116,20 +116,20 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     }
 
     return (
-      <div className="my-8 overflow-x-auto rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm p-1">
+      <div className="my-8 overflow-x-auto rounded-lg border border-border-primary bg-premium-glass backdrop-blur-sm p-1">
         <table className="w-full text-left border-collapse">
-          <thead className="border-b border-white/10 bg-white/5">
+          <thead className="border-b border-border-primary bg-premium-glass">
             <tr>
               {item.headers.map((header, index) => (
                 <th key={index} className="p-4 text-xs font-mono font-medium text-premium-gold uppercase tracking-widest">{header}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-border-primary">
             {item.rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-white/5 transition-colors">
+              <tr key={rowIndex} className="hover:bg-premium-glass transition-colors">
                 {row.map((cell, cellIndex) => (
-                  <td key={cellIndex} className="p-4 text-sm text-gray-300 font-light">{renderWithHighlights(cell)}</td>
+                  <td key={cellIndex} className="p-4 text-sm text-content-secondary font-light">{renderWithHighlights(cell)}</td>
                 ))}
               </tr>
             ))}
@@ -175,7 +175,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   if (text.startsWith('$$')) {
     const latex = text.replace(/^\$\$|\$\$$/g, '');
     return (
-      <React.Suspense fallback={<div className="my-8 h-12 animate-pulse bg-white/5 rounded-sm"></div>}>
+      <React.Suspense fallback={<div className="my-8 h-12 animate-pulse bg-premium-glass rounded-sm"></div>}>
         <MathRenderer latex={latex} />
       </React.Suspense>
     );
@@ -191,14 +191,14 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
       const definition = content.substring(colonIndex + 1);
 
       return (
-        <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
-          <strong className="text-white font-semibold">{renderWithHighlights(term)}</strong>{renderWithHighlights(definition)}
+        <p className="pl-8 relative text-content-secondary leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
+          <strong className="text-content-primary font-semibold">{renderWithHighlights(term)}</strong>{renderWithHighlights(definition)}
         </p>
       );
     }
 
     return (
-      <p className="pl-8 relative text-gray-300 leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
+      <p className="pl-8 relative text-content-secondary leading-relaxed font-light before:content-[''] before:absolute before:left-2 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-premium-gold/50">
         {renderWithHighlights(content)}
       </p>
     );
@@ -208,13 +208,13 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group">
         <div className="flex-1">
-          <p className="text-gray-300 leading-relaxed font-light text-lg group-hover:text-gray-200 transition-colors duration-300">
+          <p className="text-content-secondary leading-relaxed font-light text-lg group-hover:text-content-primary transition-colors duration-300">
             {renderWithHighlights(item as string)}
           </p>
         </div>
         <div className="w-full lg:w-1/3 flex-shrink-0 mt-4 lg:mt-0">
           <ImageThumbnail src={image1} alt="Schema della definizione economica di impresa" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 1: Il sistema impresa</p>
+          <p className="text-[10px] font-mono text-content-muted text-center mt-2 uppercase tracking-widest">Fig. 1: Il sistema impresa</p>
         </div>
       </div>
     );
@@ -225,13 +225,13 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8">
         <div className="flex-1">
           <p className="font-serif text-xl text-premium-gold mb-4">{renderWithHighlights(item as string, "font-bold")}</p>
-          <p className="text-gray-300 leading-relaxed font-light">
+          <p className="text-content-secondary leading-relaxed font-light">
             Questa figura illustra le relazioni tra l'impresa e i vari soggetti economici che interagiscono con essa, evidenziando i flussi di beni, servizi e denaro.
           </p>
         </div>
         <div className="w-full lg:w-1/3 flex-shrink-0">
           <ImageThumbnail src={image2} alt="Schema dei soggetti economici in relazione con l’impresa" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 2: Soggetti economici</p>
+          <p className="text-[10px] font-mono text-content-muted text-center mt-2 uppercase tracking-widest">Fig. 2: Soggetti economici</p>
         </div>
       </div>
     );
@@ -241,14 +241,14 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
         <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
-          <p className="text-gray-300 leading-relaxed font-light">
+          <p className="font-semibold text-content-primary mb-2">{renderWithHighlights(item as string)}</p>
+          <p className="text-content-secondary leading-relaxed font-light">
             La catena del valore disaggrega l'impresa nelle sue attività strategicamente rilevanti allo scopo di comprendere l'andamento dei costi e le fonti esistenti e potenziali di differenziazione.
           </p>
         </div>
         <div className="w-full lg:w-5/12 flex-shrink-0">
           <ImageThumbnail src={valueChainImg} alt="Catena del Valore di Porter" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 3: Catena del Valore</p>
+          <p className="text-[10px] font-mono text-content-muted text-center mt-2 uppercase tracking-widest">Fig. 3: Catena del Valore</p>
         </div>
       </div>
     );
@@ -258,14 +258,14 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     return (
       <div className="flex flex-col lg:flex-row items-start gap-8 group mt-8 mb-8">
         <div className="flex-1">
-          <p className="font-semibold text-gray-100 mb-2">{renderWithHighlights(item as string)}</p>
-          <p className="text-gray-300 leading-relaxed font-light">
+          <p className="font-semibold text-content-primary mb-2">{renderWithHighlights(item as string)}</p>
+          <p className="text-content-secondary leading-relaxed font-light">
             Confronto visivo tra la struttura organizzativa funzionale (basata sulle competenze) e quella divisionale (basata su prodotti o mercati).
           </p>
         </div>
         <div className="w-full lg:w-5/12 flex-shrink-0">
           <ImageThumbnail src={orgChartImg} alt="Struttura Funzionale vs Divisionale" onImageClick={onImageClick} />
-          <p className="text-[10px] font-mono text-gray-500 text-center mt-2 uppercase tracking-widest">Fig. 4: Organigrammi a confronto</p>
+          <p className="text-[10px] font-mono text-content-muted text-center mt-2 uppercase tracking-widest">Fig. 4: Organigrammi a confronto</p>
         </div>
       </div>
     );
@@ -304,7 +304,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   // We check cleanText to ignore potential ** at start
   if (/^(\d+(\.\d+)+|\d+\.)\s/.test(cleanText)) {
     return (
-      <p className="font-bold text-lg text-white mt-6 mb-2">
+      <p className="font-bold text-lg text-content-primary mt-6 mb-2">
         {renderWithHighlights(item as string)}
       </p>
     );
@@ -312,7 +312,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
   return (
     <div className="group transition-all duration-300 hover:translate-x-1">
-      <p className="text-gray-300 leading-relaxed font-light text-lg group-hover:text-gray-100 transition-colors">
+      <p className="text-content-secondary leading-relaxed font-light text-lg group-hover:text-content-primary transition-colors">
         {renderWithHighlights(item as string)}
       </p>
     </div>
@@ -327,10 +327,10 @@ interface SubSectionDisplayProps {
 
 const SubSectionDisplay: React.FC<SubSectionDisplayProps> = ({ subsection, anchorId, onImageClick }) => (
   <div id={anchorId} className="mb-8 last:mb-0">
-    <h3 className="text-2xl sm:text-3xl font-serif text-gray-100 mb-6 pb-4 border-b border-white/10">
+    <h3 className="text-2xl sm:text-3xl font-serif text-content-primary mb-6 pb-4 border-b border-border-primary">
       {subsection.title}
     </h3>
-    <div className="space-y-4 text-gray-300">
+    <div className="space-y-4 text-content-secondary">
       {subsection.content.map((item, index) => (
         <ContentRenderer key={index} item={item} onImageClick={onImageClick} />
       ))}
@@ -413,12 +413,12 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
               }
             </span>
           )}
-          <span className="text-xs font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1">
+          <span className="text-xs font-mono text-content-muted uppercase tracking-widest flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             {readingTime} min read
           </span>
         </div>
-        <h2 className="text-4xl sm:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-200 to-gray-500 tracking-tight">
+        <h2 className="text-4xl sm:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-br from-content-primary via-content-secondary to-content-muted tracking-tight">
           {section.title}
         </h2>
       </div>

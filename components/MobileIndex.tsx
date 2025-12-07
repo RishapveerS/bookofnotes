@@ -51,7 +51,7 @@ const MobileIndex: React.FC = () => {
             {/* Trigger Ball */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="w-9 h-9 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-gray-200 hover:text-premium-gold hover:border-premium-gold/50 transition-all duration-300 active:scale-95 shadow-lg"
+                className="w-9 h-9 rounded-full bg-premium-black/40 backdrop-blur-md border border-border-primary flex items-center justify-center text-content-primary hover:text-premium-gold hover:border-premium-gold/50 transition-all duration-300 active:scale-95 shadow-lg"
                 aria-label="Indice"
             >
                 <Menu size={18} />
@@ -62,18 +62,18 @@ const MobileIndex: React.FC = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:hidden">
                     {/* Backdrop */}
                     <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+                        className="absolute inset-0 bg-premium-black/60 backdrop-blur-md animate-in fade-in duration-300"
                         onClick={() => setIsOpen(false)}
                     />
 
                     {/* Content Card */}
-                    <div className="relative w-full max-w-sm bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[80vh] flex flex-col">
+                    <div className="relative w-full max-w-sm bg-premium-black border border-border-primary rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[80vh] flex flex-col">
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/5">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-border-primary bg-premium-gray/20">
                             <h2 className="font-serif text-lg text-premium-gold tracking-wide">Indice Contenuti</h2>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                                className="p-1 rounded-full hover:bg-premium-gray text-content-muted hover:text-content-primary transition-colors"
                             >
                                 <X size={20} />
                             </button>
@@ -101,7 +101,7 @@ const MobileIndex: React.FC = () => {
                                                     onClick={() => handleClick(anchorId)}
                                                     className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all flex items-center justify-between group ${isActive
                                                         ? 'bg-premium-gold/10 text-premium-gold font-medium'
-                                                        : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                                                        : 'text-content-muted hover:text-content-primary hover:bg-premium-gray/50'
                                                         }`}
                                                 >
                                                     <span className="line-clamp-1">{sub.title}</span>
@@ -126,7 +126,7 @@ const MobileIndex: React.FC = () => {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--border-primary);
           border-radius: 10px;
         }
       `}</style>

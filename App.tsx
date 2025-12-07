@@ -9,8 +9,8 @@ import { courseContent } from './data/courseContent';
 
 const App: React.FC = () => {
   return (
-    <div className="min-h-screen bg-premium-black text-gray-200 leading-relaxed selection:bg-premium-gold/30 selection:text-white">
-      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-premium-gray/40 via-premium-black to-black pointer-events-none" />
+    <div className="min-h-screen bg-premium-black text-content-primary leading-relaxed selection:bg-premium-gold/30 selection:text-white">
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-premium-gray/40 via-premium-black to-[var(--bg-body)] pointer-events-none" />
       <Header />
       <LessonRail />
 

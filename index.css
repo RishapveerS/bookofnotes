@@ -2,16 +2,54 @@
 @config "./tailwind.config.js";
 
 @layer base {
+    :root {
+        /* Light Mode Defaults */
+        --bg-body: #ffffff;
+        --premium-black: #ffffff;
+        --premium-dark: #f9fafb;
+        --premium-gray: #f3f4f6;
+        --premium-gold: #b4942b;
+
+        --content-primary: #111827;
+        /* gray-900 */
+        --content-secondary: #374151;
+        /* gray-700 */
+        --content-muted: #6b7280;
+        /* gray-500 */
+
+        --border-primary: rgba(0, 0, 0, 0.1);
+        --bg-glass: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark {
+        /* Dark Mode Overrides */
+        --bg-body: #050505;
+        --premium-black: #0a0a0a;
+        --premium-dark: #121212;
+        --premium-gray: #1f1f1f;
+        --premium-gold: #D4AF37;
+
+        --content-primary: #e5e5e5;
+        /* gray-200 */
+        --content-secondary: #d1d5db;
+        /* gray-300 */
+        --content-muted: #9ca3af;
+        /* gray-400 */
+
+        --border-primary: rgba(255, 255, 255, 0.1);
+        --bg-glass: rgba(255, 255, 255, 0.05);
+    }
+
     body {
-        @apply antialiased bg-[#050505] text-[#e5e5e5];
+        @apply antialiased bg-[var(--bg-body)] text-content-primary;
         font-family: 'Outfit', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Custom selection color */
     ::selection {
         background: rgba(212, 175, 55, 0.3);
-        /* Gold tint */
-        color: white;
+        color: inherit;
     }
 }
 

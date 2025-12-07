@@ -32,7 +32,7 @@ const LessonRail: React.FC = () => {
         className="hidden lg:block fixed left-8 top-32 bottom-10 z-40 w-64 overflow-y-auto pr-2 custom-scrollbar"
       >
         <div className="flex flex-col gap-8">
-          <div className="text-xs font-mono text-premium-gold/70 uppercase tracking-widest border-b border-white/10 pb-2">
+          <div className="text-xs font-mono text-premium-gold/70 uppercase tracking-widest border-b border-border-primary pb-2">
             Indice dei contenuti
           </div>
 
@@ -46,20 +46,20 @@ const LessonRail: React.FC = () => {
                   onClick={() => handleClick(`${section.id}-0`)}
                 >
                   {!['glossario', 'formulario-esempi'].includes(section.id) ? (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 text-[10px] font-mono text-gray-400 group-hover:border-premium-gold group-hover:text-premium-gold transition-colors">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-border-primary text-[10px] font-mono text-content-muted group-hover:border-premium-gold group-hover:text-premium-gold transition-colors">
                       {sectionIndex + 1}
                     </span>
                   ) : (
-                    <span className="flex h-6 w-6 items-center justify-center text-gray-400">
+                    <span className="flex h-6 w-6 items-center justify-center text-content-muted">
                       •
                     </span>
                   )}
-                  <span className="text-xs font-medium uppercase tracking-wide text-gray-400 group-hover:text-gray-200 transition-colors">
+                  <span className="text-xs font-medium uppercase tracking-wide text-content-muted group-hover:text-content-primary transition-colors">
                     {shortTitle}
                   </span>
                 </div>
 
-                <div className="ml-3 border-l border-white/10 pl-4 flex flex-col gap-2">
+                <div className="ml-3 border-l border-border-primary pl-4 flex flex-col gap-2">
                   {section.subsections.map((subsection, subsectionIndex) => {
                     const anchorId = `${section.id}-${subsectionIndex}`;
                     const isActive = activeId === anchorId;
@@ -71,7 +71,7 @@ const LessonRail: React.FC = () => {
                         onClick={() => handleClick(anchorId)}
                         className={`text-left text-sm transition-all duration-300 ${isActive
                           ? 'text-premium-gold font-medium translate-x-1'
-                          : 'text-gray-500 hover:text-gray-300'
+                          : 'text-content-muted hover:text-content-secondary'
                           }`}
                       >
                         {subsection.title}
@@ -93,11 +93,11 @@ const LessonRail: React.FC = () => {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--border-primary);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: var(--content-muted);
         }
       `}</style>
     </>

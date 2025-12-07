@@ -7,6 +7,7 @@ export default {
         "./hooks/**/*.{js,ts,jsx,tsx}",
         "./data/**/*.{js,ts,jsx,tsx}",
     ],
+    darkMode: 'class',
     theme: {
         extend: {
             fontFamily: {
@@ -16,11 +17,20 @@ export default {
             },
             colors: {
                 premium: {
-                    black: '#0a0a0a',
-                    dark: '#121212',
-                    gray: '#1f1f1f',
-                    gold: '#D4AF37',
+                    black: 'var(--premium-black)',
+                    dark: 'var(--premium-dark)',
+                    gray: 'var(--premium-gray)',
+                    gold: 'var(--premium-gold)',
+                    glass: 'var(--bg-glass)',
                     accent: '#3b82f6',
+                },
+                content: {
+                    primary: 'var(--content-primary)',
+                    secondary: 'var(--content-secondary)',
+                    muted: 'var(--content-muted)',
+                },
+                border: {
+                    primary: 'var(--border-primary)',
                 }
             },
             backgroundImage: {
