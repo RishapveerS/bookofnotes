@@ -3,53 +3,88 @@
 
 @layer base {
     :root {
-        /* Light Mode Defaults */
-        --bg-body: #ffffff;
-        --premium-black: #ffffff;
-        --premium-dark: #f9fafb;
-        --premium-gray: #f3f4f6;
-        --premium-gold: #b4942b;
+        /* --- STRICT LIGHT MODE (Paper / Ink) --- */
+        --bg-body: #FFFFFF;
+        --premium-black: #FFFFFF;
+        /* Cards blend with background or have borders */
+        --premium-dark: #F4F4F5;
+        /* Zinc-100 for subtle hovers */
+        --premium-gray: #E4E4E7;
+        /* Zinc-200 for borders */
+        --premium-gold: #000000;
+        /* "Gold" is now Black (High Contrast Accent) */
 
-        --content-primary: #111827;
-        /* gray-900 */
-        --content-secondary: #374151;
-        /* gray-700 */
-        --content-muted: #6b7280;
-        /* gray-500 */
+        --content-primary: #000000;
+        --content-secondary: #000000;
+        /* Strict Black for all text */
+        --content-muted: #52525B;
+        /* Zinc-600 (Dark Gray for metadata) */
 
-        --border-primary: rgba(0, 0, 0, 0.1);
+        --border-primary: #000000;
+        /* Black borders */
         --bg-glass: rgba(0, 0, 0, 0.05);
     }
 
     .dark {
-        /* Dark Mode Overrides */
-        --bg-body: #050505;
-        --premium-black: #0a0a0a;
-        --premium-dark: #121212;
-        --premium-gray: #1f1f1f;
-        --premium-gold: #D4AF37;
+        /* --- STRICT DARK MODE (OLED / Terminal) --- */
+        --bg-body: #000000;
+        --premium-black: #000000;
+        --premium-dark: #18181B;
+        /* Zinc-900 */
+        --premium-gray: #27272A;
+        /* Zinc-800 */
+        --premium-gold: #FFFFFF;
+        /* "Gold" is now White */
 
-        --content-primary: #e5e5e5;
-        /* gray-200 */
-        --content-secondary: #d1d5db;
-        /* gray-300 */
-        --content-muted: #9ca3af;
-        /* gray-400 */
+        --content-primary: #FFFFFF;
+        --content-secondary: #FFFFFF;
+        /* Strict White */
+        --content-muted: #A1A1AA;
+        /* Zinc-400 */
 
-        --border-primary: rgba(255, 255, 255, 0.1);
-        --bg-glass: rgba(255, 255, 255, 0.05);
+        --border-primary: #FFFFFF;
+        /* White borders */
+        --bg-glass: rgba(255, 255, 255, 0.1);
+    }
+
+    /* --- UNIFIED MONOCHROME THEME FOR ALL SUBJECTS --- */
+    /* All theme classes are retained for code compatibility but now enforce strict B&W */
+
+    .theme-emerald,
+    .theme-teal,
+    .theme-math,
+    .theme-logic,
+    .theme-blue,
+    .theme-crimson,
+    .theme-bronze,
+    .theme-silver,
+    .theme-stats {
+        /* No overrides. All subjects use the Global Root B&W variables. */
+        --bg-body: var(--bg-body);
+        --content-primary: var(--content-primary);
+        --premium-gold: var(--premium-gold);
+        /* Force specific borders if needed to be strict */
     }
 
     body {
         @apply antialiased bg-[var(--bg-body)] text-content-primary;
         font-family: 'Outfit', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition: background-color 0s;
+        /* Instant transition for high performance feel */
     }
 
-    /* Custom selection color */
+    /* High refresh rate selection style */
     ::selection {
-        background: rgba(212, 175, 55, 0.3);
-        color: inherit;
+        background: var(--content-primary);
+        color: var(--bg-body);
+    }
+
+    /* --- STRICT SQUARED AESTHETIC --- */
+    /* Remove all rounded corners ("corneration") globally */
+    *,
+    ::before,
+    ::after {
+        border-radius: 0px !important;
     }
 }
 
@@ -61,5 +96,10 @@
 
     .lesson-rail::-webkit-scrollbar {
         display: none;
+    }
+
+    /* Make borders thin and solid */
+    .border-border-primary {
+        border-width: 1px;
     }
 }

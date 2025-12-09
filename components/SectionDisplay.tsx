@@ -23,7 +23,7 @@ const highlightPattern = /(\*\*)/g;
 const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: string, alt: string) => void }> = ({ src, alt, onImageClick }) => {
   return (
     <div
-      className="relative overflow-hidden rounded-lg border border-border-primary shadow-2xl shadow-black/50 transition-all duration-500 hover:scale-[1.02] hover:border-premium-gold/30 cursor-zoom-in group"
+      className="relative overflow-hidden transition-all duration-500 hover:scale-[1.02] cursor-zoom-in group"
       onClick={() => onImageClick(src, alt)}
     >
       <img
@@ -33,7 +33,7 @@ const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: s
         className="w-full h-auto filter grayscale hover:grayscale-0 transition-all duration-700"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none flex items-end justify-center pb-4">
-        <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-border-primary">
+        <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white bg-black/50 backdrop-blur-md px-3 py-1">
           <ZoomIn size={12} /> Ingrandisci
         </span>
       </div>
@@ -111,18 +111,18 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
       return (
         <div className="my-12 space-y-8">
-          <div className="overflow-x-auto rounded-lg border border-border-primary bg-premium-glass backdrop-blur-sm p-1">
+          <div className="overflow-x-auto p-1">
             <table className="w-full text-left border-collapse">
-              <thead className="border-b border-border-primary bg-premium-glass">
+              <thead>
                 <tr>
                   {item.headers.map((header, index) => (
                     <th key={index} className="p-4 text-xs font-mono font-medium text-premium-gold uppercase tracking-widest">{header}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-primary">
+              <tbody>
                 {item.rows.map((row, rowIndex) => (
-                  <tr key={rowIndex} className="hover:bg-premium-glass transition-colors">
+                  <tr key={rowIndex} className="transition-colors">
                     {row.map((cell, cellIndex) => (
                       <td key={cellIndex} className="p-4 text-sm text-content-secondary font-light">{renderWithHighlights(cell)}</td>
                     ))}
@@ -132,8 +132,8 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
             </table>
           </div>
 
-          <div className="risk-reward-chart-container p-6 rounded-xl border border-border-primary bg-gradient-to-b from-white/5 to-transparent">
-            <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-premium-glass rounded-lg"></div>}>
+          <div className="risk-reward-chart-container p-6">
+            <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse"></div>}>
               <RiskRewardChart data={chartData} />
             </React.Suspense>
           </div>
@@ -142,18 +142,18 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     }
 
     return (
-      <div className="my-8 overflow-x-auto rounded-lg border border-border-primary bg-premium-glass backdrop-blur-sm p-1">
+      <div className="my-8 overflow-x-auto p-1">
         <table className="w-full text-left border-collapse">
-          <thead className="border-b border-border-primary bg-premium-glass">
+          <thead>
             <tr>
               {item.headers.map((header, index) => (
                 <th key={index} className="p-4 text-xs font-mono font-medium text-premium-gold uppercase tracking-widest">{header}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border-primary">
+          <tbody>
             {item.rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-premium-glass transition-colors">
+              <tr key={rowIndex} className="transition-colors">
                 {row.map((cell, cellIndex) => (
                   <td key={cellIndex} className="p-4 text-sm text-content-secondary font-light">{renderWithHighlights(cell)}</td>
                 ))}
@@ -173,12 +173,12 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     const content = text.replace(/^Attenzione\s*[:\-]\s*/i, '');
 
     return (
-      <div className="my-8 border-l-2 border-amber-500/50 bg-gradient-to-r from-amber-500/10 to-transparent px-6 py-4 rounded-r-lg">
-        <p className="text-xs font-mono font-bold tracking-widest uppercase text-amber-400 mb-2 flex items-center gap-2">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+      <div className="my-8 px-6 py-4">
+        <p className="text-xs font-mono font-bold tracking-widest uppercase text-amber-500 mb-2 flex items-center gap-2">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
           Attenzione
         </p>
-        <p className="text-sm leading-relaxed text-amber-100/90 font-light">{renderWithHighlights(content)}</p>
+        <p className="text-sm leading-relaxed text-content-secondary font-light">{renderWithHighlights(content)}</p>
       </div>
     );
   }
@@ -188,17 +188,17 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     const content = text.replace(/^(Nota|Info)\s*[:\-]\s*/i, '');
 
     return (
-      <div className="my-8 border-l-2 border-sky-500/50 bg-gradient-to-r from-sky-500/10 to-transparent px-6 py-4 rounded-r-lg">
-        <p className="text-xs font-mono font-bold tracking-widest uppercase text-sky-400 mb-2 flex items-center gap-2">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+      <div className="my-8 px-6 py-4 gap-4">
+        <p className="text-xs font-mono font-bold tracking-widest uppercase text-sky-500 mb-2 flex items-center gap-2">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-sky-500"></span>
           Nota
         </p>
-        <p className="text-sm leading-relaxed text-sky-100/90 font-light">{renderWithHighlights(content)}</p>
+        <p className="text-sm leading-relaxed text-content-secondary font-light">{renderWithHighlights(content)}</p>
       </div>
     );
   }
 
-  // Check for math pattern, handling potential invisible characters
+  // Check for math pattern
   const normalizedText = text.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]+/, '');
 
   if (normalizedText.startsWith('$$')) {
@@ -207,6 +207,28 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
       <React.Suspense fallback={<div className="my-8 h-12 animate-pulse bg-premium-glass rounded-sm"></div>}>
         <MathRenderer latex={latex} />
       </React.Suspense>
+    );
+  }
+
+  // Check for code blocks
+  // Simple check: starts with ```
+  if (normalizedText.startsWith('```')) {
+    const match = normalizedText.match(/```(\w+)?\n([\s\S]*?)```/);
+    // Fallback if regex fails (e.g. valid markdown but slight variation) or just standard split
+    const codeContent = match ? match[2] : normalizedText.replace(/```(\w+)?/, '').replace(/```$/, '');
+    const lang = match ? match[1] : '';
+
+    return (
+      <div className="my-6">
+        {lang && (
+          <div className="px-4 py-2 text-xs font-mono font-bold uppercase text-premium-gold">
+            {lang}
+          </div>
+        )}
+        <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed text-content-secondary">
+          <code>{codeContent}</code>
+        </pre>
+      </div>
     );
   }
 
@@ -356,7 +378,7 @@ interface SubSectionDisplayProps {
 
 const SubSectionDisplay: React.FC<SubSectionDisplayProps> = ({ subsection, anchorId, onImageClick }) => (
   <div id={anchorId} className="mb-8 last:mb-0">
-    <h3 className="text-2xl sm:text-3xl font-serif text-content-primary mb-6 pb-4 border-b border-border-primary">
+    <h3 className="text-2xl sm:text-3xl font-serif text-content-primary mb-6 pb-4">
       {subsection.title}
     </h3>
     <div className="space-y-4 text-content-secondary">
@@ -420,7 +442,7 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <section id={section.id} className="pt-20 -mt-20" style={{ contentVisibility: 'auto', containIntrinsicSize: '1000px' } as React.CSSProperties}>
+    <section id={section.id} className="pt-20 -mt-20">
       {lightboxImage && (
         <Lightbox
           src={lightboxImage.src}
@@ -431,7 +453,7 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
       <div className="mb-12" id={section.id !== 'fondamenti-impresa' ? 'fondamenti-impresa' : undefined}>
         <div className="flex items-center gap-3 mb-4">
           {!['glossario', 'formulario-esempi'].includes(section.id) && (
-            <span className="text-xs font-mono text-premium-gold uppercase tracking-widest border border-premium-gold/30 px-2 py-1 rounded">
+            <span className="text-xs font-mono text-premium-gold uppercase tracking-widest px-2 py-1">
               Lezione {
                 {
                   'fondamenti-impresa': '1',

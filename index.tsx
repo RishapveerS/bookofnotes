@@ -19,7 +19,7 @@ root.render(
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/subjects" element={<HomePage />} />
-        <Route path="/economia" element={<App />} />
+        <Route path="/economia" element={<SubjectPage />} />
         <Route path="/:slug" element={<SubjectPage />} />
       </Routes>
     </BrowserRouter>
