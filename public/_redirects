@@ -1,0 +1,6 @@
+# Cloudflare Pages Redirects for SPA
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Handle SPA routing - all non-file requests serve index.html
+# The 200 status means "rewrite" (serve index.html but keep URL)
+/*    /index.html   200
