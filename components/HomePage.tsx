@@ -1,113 +1,230 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { subjects, Subject } from '../data/subjects';
 import ThemeToggle from './ThemeToggle';
 
-type YearFilter = 'Year 1' | 'Year 2' | 'Year 3';
-
-const yearTitles: Record<YearFilter, string> = {
-    'Year 1': 'First Year',
-    'Year 2': 'Second Year',
-    'Year 3': 'Third Year',
-};
-
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-    const [selectedYear, setSelectedYear] = useState<YearFilter>(() => {
-        return (localStorage.getItem('selectedYear') as YearFilter) || 'Year 1';
-    });
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [isNavigating, setIsNavigating] = useState(false);
 
-    const filteredSubjects = subjects.filter(s => s.year === selectedYear);
+    // Filter subjects based on search query
+    const filteredSubjects = searchQuery.trim()
+        ? subjects.filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        : subjects;
+
+    // Group by year
+    const groupedSubjects = {
+        'Year 1': filteredSubjects.filter(s => s.year === 'Year 1'),
+        'Year 2': filteredSubjects.filter(s => s.year === 'Year 2'),
+        'Year 3': filteredSubjects.filter(s => s.year === 'Year 3'),
+    };
 
     useEffect(() => {
-        localStorage.setItem('selectedYear', selectedYear);
-    }, [selectedYear]);
+        inputRef.current?.focus();
+    }, []);
 
     const handleSubjectClick = (subject: Subject) => {
-        if (subject.slug === 'economia') {
-            navigate('/economia');
-        } else {
-            navigate(`/${subject.slug}`);
+        setSelectedSubject(subject);
+    };
+
+    const handleEnterSubject = () => {
+        if (selectedSubject) {
+            setIsNavigating(true);
+            // Small timeout to allow UI to update before navigation/rendering lag
+            setTimeout(() => {
+                navigate(selectedSubject.slug === 'economia' ? '/economia' : `/${selectedSubject.slug}`);
+            }, 10);
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (selectedSubject && e.key === 'Enter') {
+            handleEnterSubject();
+        }
+        if (e.key === 'Escape') {
+            if (selectedSubject) {
+                setSelectedSubject(null);
+                inputRef.current?.focus();
+            } else {
+                setSearchQuery('');
+            }
+        }
+    };
+
+    const getYearLabel = (year: string) => {
+        const labels = { 'Year 1': 'Primo Anno', 'Year 2': 'Secondo Anno', 'Year 3': 'Terzo Anno' };
+        return labels[year as keyof typeof labels] || year;
+    };
+
     return (
-        <div className="h-screen bg-white dark:bg-[#0a0a0a] flex flex-col transition-colors duration-500 overflow-hidden">
-
-            {/* Header */}
-            <header className="w-full py-3 flex justify-center items-center relative shrink-0">
-                <h1 className="font-serif italic text-3xl md:text-4xl text-black dark:text-white select-none">
-                    Book of Notes
-                </h1>
-                <div className="absolute right-6 top-1/2 -translate-y-1/2">
-                    <ThemeToggle />
-                </div>
-            </header>
-
-            {/* Strips Container */}
-            <div className="flex-1 w-full flex items-center justify-center px-2 md:px-4 overflow-x-auto min-h-0">
-                <div className="flex justify-start md:justify-center items-center gap-4 md:gap-6 h-full max-h-[60vh] w-max md:w-full md:max-w-[1800px] px-4">
-                    {filteredSubjects.map((subject, index) => {
-                        const isStaggered = index % 2 !== 0;
-
-                        return (
-                            <div
-                                key={subject.slug}
-                                className="flex flex-col items-center h-[85%] hover:h-[95%] transition-all duration-500 ease-out"
-                                style={{ width: 'clamp(140px, 15vw, 240px)' }}
-                            >
-                                <button
-                                    onClick={() => handleSubjectClick(subject)}
-                                    className="group relative block flex-1 w-full cursor-pointer overflow-hidden"
-                                >
-                                    {/* Image IS the strip */}
-                                    <img
-                                        src={subject.image}
-                                        alt={subject.title}
-                                        className="w-full h-full object-cover filter grayscale-[60%] brightness-95 dark:brightness-75
-                                   group-hover:grayscale-0 group-hover:brightness-100 dark:group-hover:brightness-100
-                                   transition-all duration-700 group-hover:scale-105"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
-                                        }}
-                                    />
-                                </button>
-                                {/* Title below the image */}
-                                <h3 className="font-serif text-black dark:text-white text-sm md:text-base leading-tight text-center mt-2 px-1">
-                                    {subject.title}
-                                </h3>
-                            </div>
-                        );
-                    })}
-                </div>
+        <div
+            className="min-h-screen bg-white dark:bg-[#0a0a0a] flex items-center justify-center p-4 transition-colors duration-500"
+            onKeyDown={handleKeyDown}
+        >
+            {/* Theme Toggle */}
+            <div className="fixed right-6 top-6 z-50">
+                <ThemeToggle />
             </div>
 
-            {/* Footer with Year Navigation */}
-            <footer className="w-full py-4 text-center shrink-0">
-                {/* Year Title */}
-                <h2 className="font-serif italic text-xl md:text-2xl text-black dark:text-white mb-1 transition-all duration-300">
-                    {yearTitles[selectedYear]}
-                </h2>
-                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-black/50 dark:text-white/50 mb-3">
-                    Explore subjects from this year
-                </p>
+            {selectedSubject ? (
+                /* Podium View */
+                <div className="flex flex-col items-center animate-fadeIn">
+                    {/* Image with loading state */}
+                    <div className="relative">
+                        {!imageLoaded && (
+                            <div className="h-[55vh] aspect-[2/3] rounded-2xl bg-black/5 dark:bg-white/5 
+                                            flex items-center justify-center">
+                                {/* Spinner */}
+                                <div className="w-8 h-8 border-2 border-black/10 dark:border-white/10 
+                                                border-t-black/40 dark:border-t-white/40 rounded-full animate-spin" />
+                            </div>
+                        )}
+                        <img
+                            src={selectedSubject.image}
+                            alt={selectedSubject.title}
+                            onLoad={() => setImageLoaded(true)}
+                            className={`h-[55vh] w-auto rounded-2xl shadow-2xl cursor-pointer 
+                                       hover:scale-[1.01] transition-all duration-300
+                                       ${imageLoaded ? 'opacity-100' : 'opacity-0 absolute top-0'}`}
+                            onClick={handleEnterSubject}
+                        />
+                    </div>
 
-                {/* Year Navigation Buttons */}
-                <div className="flex gap-10 justify-center text-base md:text-lg font-semibold uppercase tracking-widest">
-                    {(['Year 1', 'Year 2', 'Year 3'] as YearFilter[]).map((year) => (
+                    <h2 className="font-serif text-2xl md:text-3xl text-black dark:text-white mt-6 text-center">
+                        {selectedSubject.title}
+                    </h2>
+                    <span className="text-sm text-black/50 dark:text-white/50 mt-1">
+                        {getYearLabel(selectedSubject.year)}
+                    </span>
+
+                    {/* Button only shows when image loaded */}
+                    {imageLoaded ? (
                         <button
-                            key={year}
-                            onClick={() => setSelectedYear(year)}
-                            className={`transition-colors duration-300 py-2 px-4 ${selectedYear === year
-                                ? 'text-black dark:text-white border-b-2 border-black dark:border-white'
-                                : 'text-black/30 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60'
-                                }`}
+                            onClick={handleEnterSubject}
+                            disabled={isNavigating}
+                            className="mt-6 px-8 py-3 bg-black dark:bg-white text-white dark:text-black 
+                                       font-medium rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
                         >
-                            {year === 'Year 1' ? 'I Year' : year === 'Year 2' ? 'II Year' : 'III Year'}
+                            {isNavigating ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white/30 dark:border-black/30 
+                                                  border-t-white dark:border-t-black rounded-full animate-spin" />
+                                    <span>Apertura...</span>
+                                </>
+                            ) : (
+                                'Apri Appunti'
+                            )}
                         </button>
-                    ))}
+                    ) : (
+                        <div className="mt-6 px-8 py-3 text-black/30 dark:text-white/30 text-sm">
+                            Caricamento...
+                        </div>
+                    )}
+
+                    <button
+                        onClick={() => { setSelectedSubject(null); setImageLoaded(false); inputRef.current?.focus(); }}
+                        className="mt-4 text-sm text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white"
+                    >
+                        ← Torna alla ricerca
+                    </button>
                 </div>
-            </footer>
+            ) : (
+                /* Spotlight Panel */
+                <div className="w-full max-w-[600px] bg-white/95 dark:bg-[#161616] 
+                                rounded-2xl shadow-2xl border border-black/5 dark:border-white/10 overflow-hidden">
+
+                    {/* Search Header */}
+                    <div className="flex items-center gap-3 px-5 py-4 border-b border-black/5 dark:border-white/5">
+                        <svg className="w-5 h-5 text-black/30 dark:text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Cerca appunti..."
+                            className="flex-1 bg-transparent text-[17px] text-black dark:text-white
+                                       placeholder:text-black/30 dark:placeholder:text-white/30
+                                       focus:outline-none"
+                        />
+                        {searchQuery && (
+                            <button onClick={() => setSearchQuery('')} className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded-full">
+                                <svg className="w-4 h-4 text-black/40 dark:text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
+
+                    {/* List Content */}
+                    <div className="max-h-[55vh] overflow-y-auto">
+                        {(['Year 1', 'Year 2', 'Year 3'] as const).map((year) => {
+                            const yearSubjects = groupedSubjects[year];
+                            if (yearSubjects.length === 0) return null;
+
+                            return (
+                                <div key={year}>
+                                    {/* Section Header */}
+                                    <div className="px-5 py-2 bg-black/[0.02] dark:bg-white/[0.02] 
+                                                    border-b border-black/5 dark:border-white/5 sticky top-0">
+                                        <span className="text-[12px] font-semibold text-black/40 dark:text-white/40 uppercase tracking-wider">
+                                            {getYearLabel(year)}
+                                        </span>
+                                    </div>
+
+                                    {/* Subject List */}
+                                    {yearSubjects.map((subject, index) => (
+                                        <button
+                                            key={subject.slug}
+                                            onClick={() => { setImageLoaded(false); handleSubjectClick(subject); }}
+                                            className={`w-full px-5 py-3 flex items-center justify-between text-left
+                                                        hover:bg-black/[0.03] dark:hover:bg-white/[0.03]
+                                                        transition-colors duration-100
+                                                        ${index !== yearSubjects.length - 1 ? 'border-b border-black/[0.03] dark:border-white/[0.03]' : ''}`}
+                                        >
+                                            {/* Subject Name */}
+                                            <span className="text-[15px] text-black dark:text-white">
+                                                {subject.title}
+                                            </span>
+
+                                            {/* Arrow */}
+                                            <svg className="w-4 h-4 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    ))}
+                                </div>
+                            );
+                        })}
+
+                        {/* No Results */}
+                        {filteredSubjects.length === 0 && (
+                            <div className="py-12 text-center text-black/40 dark:text-white/40">
+                                Nessun risultato per "{searchQuery}"
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="px-5 py-3 border-t border-black/5 dark:border-white/5 
+                                    text-[11px] text-black/30 dark:text-white/30 text-center">
+                        {filteredSubjects.length} materie
+                    </div>
+                </div>
+            )}
+
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.98); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                .animate-fadeIn { animation: fadeIn 0.25s ease-out; }
+            `}</style>
         </div>
     );
 };
