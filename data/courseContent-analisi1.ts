@@ -1682,8 +1682,7 @@ export const analisi1CourseContent: MainSection[] = [
                     "**Esempio:** Sia $f(x) = x^2$ su $[0, b]$ con $b > 0$. Calcoliamo l'area di $E$.",
                     "1. Si divide l'intervallo $[0, b]$ in $n \\ge 1$ segmenti uguali, ognuno di lunghezza $b/n$, con punti $x_i = \\frac{ib}{n}$.",
                     "2. In ogni intervallo $I_i = [x_{i-1}, x_i]$ si considera il rettangolo inscritto di **maggiore** altezza (approssimazione per difetto).",
-                    "3. Si considera il rettangolo circoscritto di **minore** altezza (approssimazione per eccesso).",
-                    "Per $n \\to \\infty$: $A(E) = \\frac{b^3}{3}$ (usando $\\sum_{i=1}^{n} i^2 = \\frac{n(n+1)(2n+1)}{6}$)."
+                    "3. Si considera il rettangolo circoscritto di **minore** altezza (approssimazione per eccesso)."
                 ]
             },
             {

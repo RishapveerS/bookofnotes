@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
 import { courseContent as economiaContent } from '../data/courseContent';
 import { informaticaContent } from '../data/courseContent-informatica';
 import { analisi1CourseContent } from '../data/courseContent-analisi1';
+import { geometriaCourseContent } from '../data/courseContent-geometria';
 import ThemeToggle from './ThemeToggle';
 import { Menu, X, ChevronRight, BookOpen, Clock, ChevronDown } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
@@ -20,6 +20,7 @@ const SUBJECT_THEME_MAP: Record<string, string> = {
     'analisi-matematica-1': 'theme-math',      // Classic Math (B&W)
     'analisi-matematica-2': 'theme-math',      // Classic Math (B&W)
     'algebra-lineare': 'theme-logic',          // Deep Indigo
+    'geometria-algebra': 'theme-logic', // Deep Indigo
     'fisica-generale-1': 'theme-blue',         // Royal Blue
     'fisica-generale-2': 'theme-blue',         // Royal Blue
     'algoritmi-strutture-dati': 'theme-crimson',// Crimson Red
@@ -52,7 +53,8 @@ const SubjectPage: React.FC = () => {
     const CONTENT_MAP: Record<string, typeof economiaContent> = {
         'economia': economiaContent,
         'fondamenti-informatica': informaticaContent,
-        'analisi-1': analisi1CourseContent
+        'analisi-1': analisi1CourseContent,
+        'geometria-algebra': geometriaCourseContent
     };
 
     // Resolve Content
