@@ -1,0 +1,14 @@
+# Cloudflare Pages Configuration
+# https://developers.cloudflare.com/pages/configuration/build-caching/
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_VERSION = "10"
+
+# Enable build caching for faster deployments
+[build.cache]
+  paths = ["node_modules", ".cache"]

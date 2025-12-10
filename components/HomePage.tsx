@@ -122,7 +122,7 @@ const HomePage: React.FC = () => {
                     {(['Year 1', 'Year 2', 'Year 3'] as const).map((year) => (
                         <div key={year} className="flex-1 w-full flex flex-col h-full max-h-[85vh]">
                             {/* Year Header Banner */}
-                            <div className="mb-6 py-3 px-4 bg-black/[0.03] dark:bg-white/[0.03] 
+                            <div className="mb-4 py-3 px-4 bg-black/[0.03] dark:bg-white/[0.03] 
                                             rounded-xl border border-black/5 dark:border-white/5 
                                             text-center backdrop-blur-sm">
                                 <span className="text-sm font-bold text-black/60 dark:text-white/60 uppercase tracking-[0.2em]">
@@ -131,17 +131,17 @@ const HomePage: React.FC = () => {
                             </div>
 
                             {/* Subjects List */}
-                            <div className="flex flex-col gap-3 overflow-y-auto pr-2 custom-scrollbar">
+                            <div className="flex flex-col gap-2 overflow-y-auto pr-2 custom-scrollbar">
                                 {groupedSubjects[year].map((subject) => (
                                     <button
                                         key={subject.slug}
                                         onClick={() => { setImageLoaded(false); handleSubjectClick(subject); }}
-                                        className="group w-full p-4 bg-white dark:bg-[#161616] 
+                                        className="group w-full p-3 bg-white dark:bg-[#161616] 
                                                    border border-black/5 dark:border-white/5 rounded-xl
                                                    hover:bg-black/[0.02] dark:hover:bg-white/[0.05]
                                                    hover:border-black/10 dark:hover:border-white/10
                                                    hover:shadow-lg dark:hover:shadow-white/[0.02]
-                                                   transition-all duration-200 text-left flex items-center gap-4"
+                                                   transition-all duration-200 text-left flex items-center gap-3"
                                     >
                                         <div className="flex-1">
                                             <span className="block text-[15px] font-medium text-black/80 dark:text-white/80 group-hover:text-black dark:group-hover:text-white transition-colors">

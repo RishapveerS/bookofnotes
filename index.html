@@ -2,31 +2,108 @@
 <html lang="it" class="scroll-smooth dark">
 
 <head>
-  <meta charset="UTF-g" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book of Notes</title>
+  <!-- Critical Meta Tags First -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- SEO Meta -->
+  <title>Book of Notes - Appunti Universitari</title>
+  <meta name="description"
+    content="Appunti universitari di alta qualità per studenti di ingegneria. Analisi, Geometria, Informatica ed Economia." />
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+
+  <!-- Favicon - Use modern formats -->
   <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="apple-touch-icon" href="/favicon.png" />
+
+  <!-- DNS Prefetch for External Resources -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
+  <!-- Preconnect for Critical Origins (faster than dns-prefetch) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Preload Critical Fonts (subset for faster loading) -->
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" />
+
+  <!-- Font Stylesheets with display=swap for non-blocking -->
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
-    integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <!-- Fallback for no-JS -->
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet" />
+  </noscript>
 
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
-  }
-}
-</script>
-  <link rel="stylesheet" href="/index.css">
+  <!-- KaTeX CSS - Load async for non-blocking -->
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous"
+    media="print" onload="this.media='all'" />
+
+  <!-- Main CSS - Preload for Critical Rendering Path -->
+  <link rel="preload" href="/index.css" as="style" />
+  <link rel="stylesheet" href="/index.css" />
+
+  <!-- Module Preload for Critical JS -->
+  <link rel="modulepreload" href="/index.tsx" />
 </head>
 
 <body>
+  <!-- Critical inline styles for instant LCP -->
+  <style>
+    /* Prevent FOUC */
+    html {
+      background: #000;
+    }
+
+    html:not(.dark) {
+      background: #fff;
+    }
+
+    /* Skeleton loader for root */
+    #root:empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: inherit;
+    }
+
+    #root:empty::after {
+      content: '';
+      width: 40px;
+      height: 40px;
+      border: 3px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .dark #root:empty::after {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    html:not(.dark) #root:empty::after {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
