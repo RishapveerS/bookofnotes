@@ -1,35 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
-// Content loaded dynamically via utils/contentLoader
 import { MainSection } from '../types';
-import { loadContent } from '../utils/contentLoader';
+import { loadContent, getCachedContent } from '../utils/contentLoader';
 import ThemeToggle from './ThemeToggle';
-import { Menu, X, ChevronRight, BookOpen, Clock, ChevronDown } from 'lucide-react';
+import { Menu, ChevronRight } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
 import LessonRail from './LessonRail';
 
 // Map subjects to theme class names defined in index.css
 const SUBJECT_THEME_MAP: Record<string, string> = {
-    'economia': 'theme-emerald',               // Emerald & Finance
-    'elementi-informatica': 'theme-teal',      // Teal & Copper
-    'fondamenti-informatica': 'theme-teal',    // Teal & Copper
-    'calcolatori-elettronici': 'theme-teal',   // Teal & Copper
-    'analisi-1': 'theme-math',                 // Classic Math (B&W)
-    'analisi-matematica-1': 'theme-math',      // Classic Math (B&W)
-    'analisi-matematica-2': 'theme-math',      // Classic Math (B&W)
-    'algebra-lineare': 'theme-logic',          // Deep Indigo
-    'geometria-algebra': 'theme-logic', // Deep Indigo
-    'fisica-generale-1': 'theme-blue',         // Royal Blue
-    'fisica-generale-2': 'theme-blue',         // Royal Blue
-    'algoritmi-strutture-dati': 'theme-crimson',// Crimson Red
-    'chimica': 'theme-stats',                  // Yellow/Graphite (reused stats for contrast)
-    'automazione': 'theme-bronze',             // Sepia/Bronze
-    'ingegneria-software': 'theme-silver',     // Monochrome/Silver
-    'statistica': 'theme-stats',               // Yellow/Graphite
-    'sistemi-operativi': 'theme-teal',         // Teal/Terminal
-
-    // Fallback defaults
+    'economia': 'theme-emerald',
+    'elementi-informatica': 'theme-teal',
+    'fondamenti-informatica': 'theme-teal',
+    'calcolatori-elettronici': 'theme-teal',
+    'analisi-1': 'theme-math',
+    'analisi-matematica-1': 'theme-math',
+    'analisi-matematica-2': 'theme-math',
+    'algebra-lineare': 'theme-logic',
+    'geometria-algebra': 'theme-logic',
+    'fisica-generale-1': 'theme-blue',
+    'fisica-generale-2': 'theme-blue',
+    'algoritmi-strutture-dati': 'theme-crimson',
+    'chimica': 'theme-stats',
+    'automazione': 'theme-bronze',
+    'ingegneria-software': 'theme-silver',
+    'statistica': 'theme-stats',
+    'sistemi-operativi': 'theme-teal',
     'default': 'theme-math'
 };
 
@@ -39,7 +36,7 @@ const SubjectPage: React.FC = () => {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // Determine active slug: handle explicit param OR implicit path
+    // Determine active slug
     let activeSlug = slug;
     if (!activeSlug && location.pathname === '/economia') {
         activeSlug = 'economia';
@@ -48,72 +45,77 @@ const SubjectPage: React.FC = () => {
 
     // Resolve Subject Metadata
     const subject = subjects.find(s => s.slug === activeSlug);
+    const themeClass = SUBJECT_THEME_MAP[activeSlug] || 'theme-math';
 
-    const [content, setContent] = useState<MainSection[] | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [visibleSections, setVisibleSections] = useState(2); // Start with just 2 sections for instant render
+    // 🚀 INSTANT: Try to get cached content FIRST (synchronous)
+    const cachedContent = useMemo(() => getCachedContent(activeSlug), [activeSlug]);
 
+    const [content, setContent] = useState<MainSection[] | null>(cachedContent);
+    const [isLoading, setIsLoading] = useState(!cachedContent); // Only loading if not cached
+    const [visibleSections, setVisibleSections] = useState(cachedContent ? 5 : 2);
+
+    // Reset when subject changes
     useEffect(() => {
-        // Reset visible sections when subject changes
-        setVisibleSections(2);
+        const cached = getCachedContent(activeSlug);
+        if (cached) {
+            // 🚀 INSTANT: Content is cached, show immediately
+            setContent(cached);
+            setIsLoading(false);
+            setVisibleSections(5); // Show more sections immediately since content is ready
+        } else {
+            // Content not cached, need to load
+            setVisibleSections(2);
+            setIsLoading(true);
+            loadContent(activeSlug).then(data => {
+                setContent(data);
+                setIsLoading(false);
+            });
+        }
     }, [activeSlug]);
 
+    // Progressive rendering for remaining sections
     useEffect(() => {
-        // Progressive rendering: if we have more content than currently visible, 
-        // schedule the next chunk to render
         if (content && visibleSections < content.length) {
             const timer = requestAnimationFrame(() => {
-                setVisibleSections(prev => Math.min(prev + 3, content.length));
+                setVisibleSections(prev => Math.min(prev + 5, content.length));
             });
             return () => cancelAnimationFrame(timer);
         }
     }, [visibleSections, content]);
 
-    useEffect(() => {
-        const fetchContent = async () => {
-            setIsLoading(true);
-            const data = await loadContent(activeSlug);
-            setContent(data);
-            setIsLoading(false);
-        };
-
-        fetchContent();
-    }, [activeSlug]);
-
-    // Resolve Theme Class
-    const themeClass = SUBJECT_THEME_MAP[activeSlug] || 'theme-math';
-
+    // Error states
     if (!subject) {
         return (
-            <div className="min-h-screen bg-neutral-900 flex items-center justify-center text-white">
+            <div className="min-h-screen bg-[var(--bg-body)] flex items-center justify-center text-content-primary">
                 <div className="text-center">
                     <p className="text-xl mb-4">Materia non trovata: {activeSlug}</p>
-                    <button onClick={() => navigate('/subjects')} className="text-yellow-500 underline">Torna all'indice</button>
+                    <button onClick={() => navigate('/subjects')} className="text-premium-gold underline">Torna all'indice</button>
                 </div>
             </div>
         );
     }
 
-    if (isLoading) {
+    // 🚀 Only show loading if content truly isn't ready
+    if (isLoading && !content) {
         return (
-            <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 border-4 border-yellow-500/30 border-t-yellow-500 rounded-full animate-spin mb-6"></div>
-                <h1 className="text-2xl font-serif text-yellow-500 mb-2">{subject.title}</h1>
-                <p className="text-neutral-400">Caricamento appunti...</p>
+            <div className={`min-h-screen ${themeClass} bg-[var(--bg-body)] text-content-primary p-8 flex flex-col items-center justify-center`}>
+                <div className="w-10 h-10 border-2 border-content-primary/20 border-t-content-primary/60 rounded-full animate-spin mb-4"></div>
+                <h1 className="text-xl font-serif text-premium-gold mb-2">{subject.title}</h1>
+                <p className="text-content-muted text-sm">Caricamento...</p>
             </div>
         );
     }
 
     if (!content) {
         return (
-            <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
-                <button onClick={() => navigate('/subjects')} className="absolute top-8 left-8 text-neutral-400 hover:text-white flex items-center gap-2">
+            <div className={`min-h-screen ${themeClass} bg-[var(--bg-body)] text-content-primary p-8 flex flex-col items-center justify-center`}>
+                <button onClick={() => navigate('/subjects')} className="absolute top-8 left-8 text-content-muted hover:text-content-primary flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                     Torna
                 </button>
                 <div className="text-6xl mb-6">🚧</div>
-                <h1 className="text-3xl font-serif text-yellow-500 mb-4">{subject.title}</h1>
-                <p className="text-neutral-400">Contenuto in arrivo...</p>
+                <h1 className="text-3xl font-serif text-premium-gold mb-4">{subject.title}</h1>
+                <p className="text-content-muted">Contenuto in arrivo...</p>
             </div>
         );
     }

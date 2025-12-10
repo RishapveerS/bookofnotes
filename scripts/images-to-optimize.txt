@@ -1,0 +1,27 @@
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/ANALISI-1.png
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/FISICA.png
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/GEOMETRIA-E-ALGEBRA-LINEARE.png
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/economia e organizzazione aziendale.png
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/elettrotecnica.png
+/home/zonar/projects/ECONOMIA SITE/public/FIRST-YEAR-IMAGES/fondamenti-di-informatica.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /    ALGORITMI E PRINCIPI DELL'INFORMATICA.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /    FONDAMENTI DI AUTOMATICA.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /    SEGNALI PER LE COMUNICAZIONI.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /  PROBABILITÀ E STATISTICA.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /ANALISI-2.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI'.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /ELETTROMAGNETISMO E CAMPI.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /INFORMAZIONE E STIMA.png
+/home/zonar/projects/ECONOMIA SITE/public/SECOND-YEAR-IMAGES /LOGICA E ALGEBRA'.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /    BASI DI DATI 1.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /    FONDAMENTI DI ELETTRONICA.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /    INGEGNERIA DEL SOFTWARE.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /FONDAMENTI DI COMUNICAZIONE E INTERNET.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /RETI LOGICHE.png
+/home/zonar/projects/ECONOMIA SITE/public/THIRD-YEAR-IMAGES  /SISTEMI INFORMATIVI.png
+/home/zonar/projects/ECONOMIA SITE/public/favicons/option2_chart.png
+/home/zonar/projects/ECONOMIA SITE/public/favicons/option3_coin.png
+/home/zonar/projects/ECONOMIA SITE/public/favicons/option5_pillar.png
+/home/zonar/projects/ECONOMIA SITE/public/org_chart.png
+/home/zonar/projects/ECONOMIA SITE/public/placeholder.jpg
+/home/zonar/projects/ECONOMIA SITE/public/value_chain.png
