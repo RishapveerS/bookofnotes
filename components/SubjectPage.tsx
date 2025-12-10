@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
-import { courseContent as economiaContent } from '../data/courseContent';
-import { informaticaContent } from '../data/courseContent-informatica';
-import { analisi1CourseContent } from '../data/courseContent-analisi1';
-import { geometriaCourseContent } from '../data/courseContent-geometria';
+// Content loaded dynamically via utils/contentLoader
+import { MainSection } from '../types';
+import { loadContent } from '../utils/contentLoader';
 import ThemeToggle from './ThemeToggle';
 import { Menu, X, ChevronRight, BookOpen, Clock, ChevronDown } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
@@ -50,15 +49,19 @@ const SubjectPage: React.FC = () => {
     // Resolve Subject Metadata
     const subject = subjects.find(s => s.slug === activeSlug);
 
-    const CONTENT_MAP: Record<string, typeof economiaContent> = {
-        'economia': economiaContent,
-        'fondamenti-informatica': informaticaContent,
-        'analisi-1': analisi1CourseContent,
-        'geometria-algebra': geometriaCourseContent
-    };
+    const [content, setContent] = useState<MainSection[] | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Resolve Content
-    const content = CONTENT_MAP[activeSlug] || null;
+    useEffect(() => {
+        const fetchContent = async () => {
+            setIsLoading(true);
+            const data = await loadContent(activeSlug);
+            setContent(data);
+            setIsLoading(false);
+        };
+
+        fetchContent();
+    }, [activeSlug]);
 
     // Resolve Theme Class
     const themeClass = SUBJECT_THEME_MAP[activeSlug] || 'theme-math';
@@ -74,6 +77,16 @@ const SubjectPage: React.FC = () => {
         );
     }
 
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-yellow-500/30 border-t-yellow-500 rounded-full animate-spin mb-6"></div>
+                <h1 className="text-2xl font-serif text-yellow-500 mb-2">{subject.title}</h1>
+                <p className="text-neutral-400">Caricamento appunti...</p>
+            </div>
+        );
+    }
+
     if (!content) {
         return (
             <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
@@ -83,7 +96,7 @@ const SubjectPage: React.FC = () => {
                 </button>
                 <div className="text-6xl mb-6">🚧</div>
                 <h1 className="text-3xl font-serif text-yellow-500 mb-4">{subject.title}</h1>
-                <p className="text-neutral-400">Contenuto in fase di caricamento...</p>
+                <p className="text-neutral-400">Contenuto in arrivo...</p>
             </div>
         );
     }

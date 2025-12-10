@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { subjects, Subject } from '../data/subjects';
 import ThemeToggle from './ThemeToggle';
+import { prefetchContent, prefetchAllContent } from '../utils/contentLoader';
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -9,7 +10,6 @@ const HomePage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
     const [imageLoaded, setImageLoaded] = useState(false);
-    const [isNavigating, setIsNavigating] = useState(false);
 
     // Filter subjects based on search query
     const filteredSubjects = searchQuery.trim()
@@ -25,19 +25,18 @@ const HomePage: React.FC = () => {
 
     useEffect(() => {
         inputRef.current?.focus();
+        // Prefetch ALL content immediately in background
+        prefetchAllContent();
     }, []);
 
     const handleSubjectClick = (subject: Subject) => {
         setSelectedSubject(subject);
+        prefetchContent(subject.slug);
     };
 
     const handleEnterSubject = () => {
         if (selectedSubject) {
-            setIsNavigating(true);
-            // Small timeout to allow UI to update before navigation/rendering lag
-            setTimeout(() => {
-                navigate(selectedSubject.slug === 'economia' ? '/economia' : `/${selectedSubject.slug}`);
-            }, 10);
+            navigate(selectedSubject.slug === 'economia' ? '/economia' : `/${selectedSubject.slug}`);
         }
     };
 
@@ -105,19 +104,10 @@ const HomePage: React.FC = () => {
                     {imageLoaded ? (
                         <button
                             onClick={handleEnterSubject}
-                            disabled={isNavigating}
                             className="mt-6 px-8 py-3 bg-black dark:bg-white text-white dark:text-black 
-                                       font-medium rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
+                                       font-medium rounded-full hover:opacity-90 transition-opacity transform active:scale-95 duration-75"
                         >
-                            {isNavigating ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 dark:border-black/30 
-                                                  border-t-white dark:border-t-black rounded-full animate-spin" />
-                                    <span>Apertura...</span>
-                                </>
-                            ) : (
-                                'Apri Appunti'
-                            )}
+                            Apri Appunti
                         </button>
                     ) : (
                         <div className="mt-6 px-8 py-3 text-black/30 dark:text-white/30 text-sm">
