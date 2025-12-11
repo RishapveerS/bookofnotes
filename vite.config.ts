@@ -80,33 +80,16 @@ export default defineConfig(({ mode }) => {
             ? 'assets/[name]-[hash:8].[ext]'
             : 'assets/[name].[ext]',
           // Advanced manual chunking strategy
-          manualChunks: (id) => {
-            // React core - rarely changes
-            if (id.includes('node_modules/react/') ||
-              id.includes('node_modules/react-dom/')) {
-              return 'vendor-react';
-            }
+          // Use object-based chunks to ensure proper loading order
+          manualChunks: {
+            // React core + recharts together to avoid forwardRef issue
+            'vendor-react': ['react', 'react-dom', 'recharts'],
             // React Router - separate chunk
-            if (id.includes('node_modules/react-router')) {
-              return 'vendor-router';
-            }
-            // Charts library (heavy, rarely used on initial load)
-            if (id.includes('node_modules/recharts') ||
-              id.includes('node_modules/d3')) {
-              return 'vendor-charts';
-            }
+            'vendor-router': ['react-router-dom'],
             // Math rendering (KaTeX)
-            if (id.includes('node_modules/katex')) {
-              return 'vendor-math';
-            }
+            'vendor-math': ['katex'],
             // Lucide icons
-            if (id.includes('node_modules/lucide-react')) {
-              return 'vendor-icons';
-            }
-            // Course content files - each gets own chunk (already dynamic)
-            if (id.includes('/data/courseContent')) {
-              return undefined; // Let Vite handle dynamic imports
-            }
+            'vendor-icons': ['lucide-react'],
           },
         },
         // Tree shake aggressively
@@ -121,8 +104,7 @@ export default defineConfig(({ mode }) => {
     },
     // Optimize dependencies
     optimizeDeps: {
-      include: ['react', 'react-dom', 'react-router-dom'],
-      exclude: ['recharts'], // Lazy load this
+      include: ['react', 'react-dom', 'react-router-dom', 'recharts'],
     },
     // Enable experimental features for better performance
     esbuild: {
